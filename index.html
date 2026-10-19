@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iSaidub Clone - Movies Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Connects your site to the cloud server -->
+    <script src="https://jsdelivr.net"></script>
+</head>
+<body>
+    <header>
+        <h1>iSaidub Movies</h1>
+        <input type="text" id="searchBar" placeholder="Search movies..." onkeyup="searchMovies()">
+    </header>
+
+    <main id="categoriesContainer">
+        <!-- Organized categories will appear here automatically -->
+    </main>
+
+    <script>
+        // Paste your secret Supabase credentials here
+        const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const categories = ["Tamil Dubbed Movies", "Hollywood Movies", "Bollywood Movies", "Anime & Cartoons"];
+        let movies = [];
+
+        // Fetches movies live from the cloud database so your phone can see them
+        async function fetchLiveMovies() {
+            const { data, error } = await supabase.from('movies_list').select('*');
+            if (error) {
+                console.error("Error loading movies:", error.message);
+                return;
+            }
+            movies = data || [];
+            displayMovies();
+        }
+
+        function displayMovies(moviesToRender = movies) {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = ""; 
+
+            if(moviesToRender.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#888; margin-top: 40px;'>No movies available yet.</p>";
+                return;
+            }
+
+            categories.forEach(catName => {
+                const filteredMovies = moviesToRender.filter(m => m.category === catName);
+
+                if (filteredMovies.length > 0) {
+                    const section = document.createElement('section');
+                    section.className = 'category';
+                    section.style.marginBottom = "40px";
+
+                    section.innerHTML = `
+                        <h2 style="color: #ff9900; border-bottom: 2px solid #2d2d2d; padding-bottom: 8px;">${catName}</h2>
+                        <div class="movie-grid"></div>
+                    `;
+
+                    const grid = section.querySelector('.movie-grid');
+
+                    filteredMovies.forEach(movie => {
+                        const card = document.createElement('div');
+                        card.className = 'movie-card';
+                        card.innerHTML = `
+                            <h3>${movie.title}</h3>
+                            <a href="${movie.fileData}" target="_blank" class="download-btn">Download Movie</a>
+                        `;
+                        grid.appendChild(card);
+                    });
+
+                    container.appendChild(section);
+                }
+            });
+        }
+
+        function searchMovies() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const filtered = movies.filter(m => m.title.toLowerCase().includes(query));
+            displayMovies(filtered);
+        }
+
+        // Run the cloud sync on start
+        fetchLiveMovies();
+    </script>
+</body>
+</html>
