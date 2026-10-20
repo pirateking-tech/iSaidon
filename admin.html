@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iSaidub - Private Admin Control</title>
     
-    <!-- Using unpkg network as a backup to load the database library -->
-    <script src="https://unpkg.com"></script>
+    <!-- FIX: Reads your custom supabase.js file locally from your GitHub repository -->
+    <script src="supabase.js"></script>
     
     <style>
-        /* This internal stylesheet ensures your form remains visible even if style.css is missing */
         body { 
             font-family: Arial, sans-serif; 
             background: #121212; 
@@ -100,32 +99,34 @@
 </div>
 
 <script>
-    // ⚠️ paste your real database credentials inside these quotes
-    const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co"; 
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
+    // ⚠️ PASTE YOUR EXACT SUPABASE CREDENTIALS HERE
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
     
-    // Initialise database connector safely
-    const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    window.addEventListener('DOMContentLoaded', () => {
+        // Initialize the localized database connection bridge
+        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        const title = document.getElementById('movieTitle').value;
-        const category = document.getElementById('movieCategory').value;
-        const streamLink = document.getElementById('streamLink').value;
+            const title = document.getElementById('movieTitle').value;
+            const category = document.getElementById('movieCategory').value;
+            const streamLink = document.getElementById('streamLink').value;
 
-        // Save data directly to your table row structure
-        const { data, error } = await dbClient
-            .from('movies')
-            .insert([{ title: title, category: category, stream_link: streamLink }]);
+            // Push form values straight into your table structure layout
+            const { data, error } = await dbClient
+                .from('movies')
+                .insert([{ title: title, category: category, stream_link: streamLink }]);
 
-        if (error) {
-            console.error("Database Write Failed:", error);
-            alert("Failed to publish movie: " + error.message);
-        } else {
-            alert("🎉 Movie successfully published to the public portal!");
-            document.getElementById('uploadForm').reset();
-        }
+            if (error) {
+                console.error("Database Write Failed:", error);
+                alert("Failed to publish movie: " + error.message);
+            } else {
+                alert("🎉 Movie successfully published to the public portal!");
+                document.getElementById('uploadForm').reset();
+            }
+        });
     });
 </script>
 </body>
