@@ -1,25 +1,125 @@
-<!-- 1. Place the database connector script back into the <head> block -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!-- ... keeping your other head meta tags and styles exactly the same ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iSaidub Clone - Movies Portal</title>
     
-    <!-- FIX: Using the rock-solid cdnjs distributor for maximum uptime and speed -->
+    <!-- NETWORK LAYER: Triple fallback architecture to bypass network blocks -->
     <script src="https://cloudflare.com"></script>
-</head>
-
-<body>
-    <!-- ... keeping your category layout sections exactly the same ... -->
-
-    <!-- 2. The main database script code right before the closing </body> tag -->
     <script>
-        // Double-check: Make sure this runs AFTER the script tag above is completely read
-        const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co"; 
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
-        
-        // Safety check to prevent crashing if the network drops frames
         if (typeof supabase === 'undefined') {
-            console.error("Database framework failed to load. Checking fallback route...");
-            alert("Database connection delayed. Please try refreshing the page.");
-        } else {
+            console.log('Primary CDN blocked. Loading unpkg fallback...');
+            document.write('<script src="https://unpkg.com"><\/script>');
+        }
+    </script>
+    <script>
+        if (typeof supabase === 'undefined') {
+            console.log('Secondary CDN blocked. Loading jsdelivr fallback...');
+            document.write('<script src="https://jsdelivr.net"><\/script>');
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #141414; 
+            color: #ffffff; 
+            padding: 20px; 
+            margin: 0;
+        }
+        h1 { 
+            color: #E50914; 
+            text-align: center; 
+            margin-top: 30px;
+            font-size: 32px;
+        }
+        .category-section { 
+            max-width: 1000px;
+            margin: 40px auto; 
+        }
+        .category-title { 
+            border-bottom: 2px solid #E50914; 
+            padding-bottom: 8px; 
+            margin-bottom: 20px; 
+            font-size: 20px;
+            color: #f3f3f3;
+        }
+        .movie-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 20px; 
+        }
+        .movie-card { 
+            background: #222222; 
+            padding: 20px; 
+            border-radius: 6px; 
+            text-align: center; 
+            border: 1px solid #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .movie-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #fff;
+        }
+        .watch-btn { 
+            display: inline-block; 
+            background: #E50914; 
+            color: white; 
+            padding: 10px 16px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            transition: background 0.2s;
+        }
+        .watch-btn:hover {
+            background: #b80710;
+        }
+        .loading-text {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>iSaidub Movies</h1>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Tamil Dubbed Movies</h2>
+        <div class="movie-grid" id="tamil-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Hollywood Movies</h2>
+        <div class="movie-grid" id="hollywood-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Bollywood Movies</h2>
+        <div class="movie-grid" id="bollywood-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Anime & Cartoons</h2>
+        <div class="movie-grid" id="anime-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+<script>
+    // ⚠️ PASTE YOUR EXACT SUPABASE CREDENTIALS HERE
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    
+    // Delayed startup execution checker to allow network engine components to assemble safely
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (typeof supabase === 'undefined') {
+                alert("Database framework failed to load across all channels. Please refresh your browser window.");
+                return;
+            }
+
             const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
             async function loadMovies() {
@@ -33,7 +133,6 @@
                     return;
                 }
 
-                // Clear the loading text layout cards
                 document.getElementById('tamil-movies').innerHTML = '';
                 document.getElementById('hollywood-movies').innerHTML = '';
                 document.getElementById('bollywood-movies').innerHTML = '';
@@ -68,8 +167,9 @@
                 });
             }
 
-            // Fire up data retrieval
             loadMovies();
-        }
-    </script>
+        }, 300); // 300ms network settling window buffer
+    });
+</script>
 </body>
+</html>
