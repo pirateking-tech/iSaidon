@@ -5,20 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iSaidub Clone - Movies Portal</title>
     
-    <!-- NETWORK LAYER: Triple fallback architecture to bypass network blocks -->
-    <script src="https://cloudflare.com"></script>
-    <script>
-        if (typeof supabase === 'undefined') {
-            console.log('Primary CDN blocked. Loading unpkg fallback...');
-            document.write('<script src="https://unpkg.com"><\/script>');
-        }
-    </script>
-    <script>
-        if (typeof supabase === 'undefined') {
-            console.log('Secondary CDN blocked. Loading jsdelivr fallback...');
-            document.write('<script src="https://jsdelivr.net"><\/script>');
-        }
-    </script>
+    <!-- FIX: Reads your custom supabase.js file locally from your GitHub repository -->
+    <script src="supabase.js"></script>
     
     <style>
         body { 
@@ -87,6 +75,7 @@
 
     <h1>iSaidub Movies</h1>
 
+    <!-- Movie Category Grids -->
     <div class="category-section">
         <h2 class="category-title">🎬 Tamil Dubbed Movies</h2>
         <div class="movie-grid" id="tamil-movies"><p class="loading-text">Loading movies...</p></div>
@@ -109,66 +98,64 @@
 
 <script>
     // ⚠️ PASTE YOUR EXACT SUPABASE CREDENTIALS HERE
-   const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co"; 
-   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
     
-    // Delayed startup execution checker to allow network engine components to assemble safely
     window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            if (typeof supabase === 'undefined') {
-                alert("Database framework failed to load across all channels. Please refresh your browser window.");
+        // Initialize the localized database connection bridge
+        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        async function loadMovies() {
+            // Fetch rows sorted by newest upload date
+            const { data: movies, error } = await dbClient
+                .from('movies')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Database connection failed:", error);
                 return;
             }
 
-            const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            async function loadMovies() {
-                const { data: movies, error } = await dbClient
-                    .from('movies')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+            // Clear loading text placeholders
+            document.getElementById('tamil-movies').innerHTML = '';
+            document.getElementById('hollywood-movies').innerHTML = '';
+            document.getElementById('bollywood-movies').innerHTML = '';
+            document.getElementById('anime-movies').innerHTML = '';
 
-                if (error) {
-                    console.error("Database connection failed:", error);
-                    return;
-                }
-
-                document.getElementById('tamil-movies').innerHTML = '';
-                document.getElementById('hollywood-movies').innerHTML = '';
-                document.getElementById('bollywood-movies').innerHTML = '';
-                document.getElementById('anime-movies').innerHTML = '';
-
-                if (!movies || movies.length === 0) {
-                    const emptyStr = "<p class='loading-text'>No movies found here yet.</p>";
-                    document.getElementById('tamil-movies').innerHTML = emptyStr;
-                    document.getElementById('hollywood-movies').innerHTML = emptyStr;
-                    document.getElementById('bollywood-movies').innerHTML = emptyStr;
-                    document.getElementById('anime-movies').innerHTML = emptyStr;
-                    return;
-                }
-
-                movies.forEach(movie => {
-                    const movieCard = document.createElement('div');
-                    movieCard.className = 'movie-card';
-                    movieCard.innerHTML = `
-                        <h3>${movie.title}</h3>
-                        <a href="${movie.stream_link}" target="_blank" class="watch-btn">Stream / Watch</a>
-                    `;
-
-                    if (movie.category === "Tamil Dubbed Movies") {
-                        document.getElementById('tamil-movies').appendChild(movieCard);
-                    } else if (movie.category === "Hollywood Movies") {
-                        document.getElementById('hollywood-movies').appendChild(movieCard);
-                    } else if (movie.category === "Bollywood Movies") {
-                        document.getElementById('bollywood-movies').appendChild(movieCard);
-                    } else if (movie.category === "Anime & Cartoons") {
-                        document.getElementById('anime-movies').appendChild(movieCard);
-                    }
-                });
+            // Handle empty database scenario
+            if (!movies || movies.length === 0) {
+                const emptyStr = "<p class='loading-text'>No movies found here yet.</p>";
+                document.getElementById('tamil-movies').innerHTML = emptyStr;
+                document.getElementById('hollywood-movies').innerHTML = emptyStr;
+                document.getElementById('bollywood-movies').innerHTML = emptyStr;
+                document.getElementById('anime-movies').innerHTML = emptyStr;
+                return;
             }
 
-            loadMovies();
-        }, 300); // 300ms network settling window buffer
+            // Render and append each movie entry to its matching container element
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <h3>${movie.title}</h3>
+                    <a href="${movie.stream_link}" target="_blank" class="watch-btn">Stream / Watch</a>
+                `;
+
+                if (movie.category === "Tamil Dubbed Movies") {
+                    document.getElementById('tamil-movies').appendChild(movieCard);
+                } else if (movie.category === "Hollywood Movies") {
+                    document.getElementById('hollywood-movies').appendChild(movieCard);
+                } else if (movie.category === "Bollywood Movies") {
+                    document.getElementById('bollywood-movies').appendChild(movieCard);
+                } else if (movie.category === "Anime & Cartoons") {
+                    document.getElementById('anime-movies').appendChild(movieCard);
+                }
+            });
+        }
+
+        // Fire database pull query immediately
+        loadMovies();
     });
 </script>
 </body>
