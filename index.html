@@ -165,9 +165,11 @@
                 movieCard.className = 'movie-card';
                 movieCard.innerHTML = `
                     <h3>${movie.title}</h3>
-                    <a href="${movie.link}" download="${movie.title}.mp4" style="display: block; width: 100%; padding: 12px; background: #ff6600; color: white; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; font-family: sans-serif; box-sizing: border-box; margin-top: 10px;">
-                       📥 Direct Download
+                    <!-- UPDATE THIS LINE IN YOUR INDEX.HTML LOOP -->
+                    <a href="${movie.link}" target="_blank" style="display: block; width: 100%; padding: 12px; background: #ff6600; color: white; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; font-family: sans-serif; box-sizing: border-box; margin-top: 10px;">
+                       📥 Go to Gofile Download
                     </a>
+
                 `;
 
                 if (movie.category === "Tamil Dubbed Movies") {
