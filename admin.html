@@ -5,23 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iSaidub - Private Admin Control</title>
     
+    <!-- Using unpkg network as a backup to load the database library -->
     <script src="https://unpkg.com"></script>
     
-    <!-- Note: Make sure style.css is placed in the exact same folder as admin.html in GitHub -->
-    <link rel="stylesheet" href="css/style.css"> 
+    <style>
+        /* This internal stylesheet ensures your form remains visible even if style.css is missing */
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #121212; 
+            color: #ffffff; 
+            padding: 20px; 
+            margin: 0;
+        }
+        .container { 
+            max-width: 500px; 
+            margin: 40px auto; 
+            background: #1e1e1e; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        h2 { 
+            margin-top: 0; 
+            color: #E50914; 
+            font-size: 24px;
+        }
+        p {
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+        label { 
+            display: block; 
+            margin-top: 15px; 
+            font-weight: bold; 
+            color: #e5e5e5;
+        }
+        input, select, button { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 8px; 
+            border-radius: 4px; 
+            border: 1px solid #444; 
+            background: #2a2a2a; 
+            color: white; 
+            box-sizing: border-box; 
+            font-size: 16px;
+        }
+        input:focus, select:focus {
+            border-color: #E50914;
+            outline: none;
+        }
+        select option { 
+            background: #1e1e1e; 
+        }
+        button { 
+            background: #E50914; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 25px; 
+            transition: background 0.2s; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        button:hover { 
+            background: #b80710; 
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Your Form HTML Code stays exactly here -->
+<div class="container">
+    <h2>🔐 Admin Control Dashboard</h2>
+    <p>Upload StreamTape links directly to the cloud server database</p>
+    
+    <form id="uploadForm">
+        <label for="movieTitle">Movie Title:</label>
+        <input type="text" id="movieTitle" placeholder="Enter Movie Title (e.g., Leo 2023)" required>
+
+        <label for="movieCategory">Select Category:</label>
+        <select id="movieCategory">
+            <option value="Tamil Dubbed Movies">Tamil Dubbed Movies</option>
+            <option value="Hollywood Movies">Hollywood Movies</option>
+            <option value="Bollywood Movies">Bollywood Movies</option>
+            <option value="Anime & Cartoons">Anime & Cartoons</option>
+        </select>
+
+        <label for="streamLink">Paste StreamTape Link:</label>
+        <input type="url" id="streamLink" placeholder="https://streamtape.com..." required>
+
+        <button type="submit">Publish to Cloud Website</button>
+    </form>
+</div>
 
 <script>
-    const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co"; 
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
+    // ⚠️ paste your real database credentials inside these quotes
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
     
-    // FIX 2: Fixed initialization crash. Notice the capital "S" in supabase.createClient
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Initialise database connector safely
+    const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // FIX 3: Updated the event listener to use our new safe variable name: supabaseClient
     document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -29,13 +114,13 @@
         const category = document.getElementById('movieCategory').value;
         const streamLink = document.getElementById('streamLink').value;
 
-        // Push data to database using the initialized client
-        const { data, error } = await supabaseClient
+        // Save data directly to your table row structure
+        const { data, error } = await dbClient
             .from('movies')
             .insert([{ title: title, category: category, stream_link: streamLink }]);
 
         if (error) {
-            console.error("Database Error:", error);
+            console.error("Database Write Failed:", error);
             alert("Failed to publish movie: " + error.message);
         } else {
             alert("🎉 Movie successfully published to the public portal!");
