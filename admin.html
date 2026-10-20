@@ -71,6 +71,44 @@
         button:hover { 
             background: #b80710; 
         }
+
+         /* Manager Section Styles */
+        .manager-section { 
+            margin-top: 40px; 
+            border-top: 2px solid #333; 
+            padding-top: 20px; 
+        }
+        .movie-list-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; background: #2a2a2a; 
+            padding: 12px; 
+            margin-top: 10px; 
+            border-radius: 4px; 
+            border: 1px solid #444; 
+        }
+        .movie-info { 
+            font-size: 14px; 
+        }
+        .movie-info span { 
+            color: #888; 
+            font-size: 12px; 
+            display: block; 
+        }
+        .delete-btn { 
+            background: #d9534f; 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            width: auto; 
+            margin-top: 0; 
+            font-size: 14px; 
+        }
+        .delete-btn:hover { 
+            background: #c9302c; 
+        }
     </style>
 </head>
 <body>
@@ -96,6 +134,11 @@
 
         <button type="submit">Publish to Cloud Website</button>
     </form>
+
+     <!-- NEW REMOVE MODULE CONTAINER -->
+    <div class="manager-section">
+        <h2>🗑️ Remove Published Movies</h2>
+        <div id="admin-movie-list">Loading active records...</div>
 </div>
 
 <script>
