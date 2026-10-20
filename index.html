@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iSaidon Movies - Movies Portal</title>
+    
+    <!-- FIX: Reads your custom supabase.js file locally from your GitHub repository -->
+    <script src="supabase.js"></script>
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #141414; 
+            color: #ffffff; 
+            padding: 20px; 
+            margin: 0;
+        }
+        h1 { 
+            color: #E50914; 
+            text-align: center; 
+            margin-top: 30px;
+            font-size: 32px;
+        }
+        .category-section { 
+            max-width: 1000px;
+            margin: 40px auto; 
+        }
+        .category-title { 
+            border-bottom: 2px solid #E50914; 
+            padding-bottom: 8px; 
+            margin-bottom: 20px; 
+            font-size: 20px;
+            color: #f3f3f3;
+        }
+        .movie-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 20px; 
+        }
+        .movie-card { 
+            background: #222222; 
+            padding: 20px; 
+            border-radius: 6px; 
+            text-align: center; 
+            border: 1px solid #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .movie-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #fff;
+        }
+        .watch-btn { 
+            display: inline-block; 
+            background: #E50914; 
+            color: white; 
+            padding: 10px 16px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            transition: background 0.2s;
+        }
+        .watch-btn:hover {
+            background: #b80710;
+        }
+        .loading-text {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+        .search-container { 
+            max-width: 500px; 
+            margin: 20px auto 40px auto; 
+            text-align: center; 
+        }
+        .search-box { 
+            width: 100%; 
+            padding: 12px 20px; 
+            border-radius: 25px; 
+            border: 2px solid #333; 
+            background: #222; 
+            color: white; 
+            font-size: 16px; 
+            outline: none; 
+            transition: border-color 0.2s; 
+            box-sizing: border-box; 
+        }
+        .search-box:focus { 
+            border-color: #E50914; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>iSaidon Movies Movies</h1>
+
+    <!-- NEW SEARCH BOX INPUT FIELD -->
+    <div class="search-container">
+        <input type="text" id="movieSearch" class="search-box" placeholder="🔍 Search through published movies instantly...">
+    </div>
+
+    <!-- Movie Category Grids -->
+    <div class="category-section">
+        <h2 class="category-title">🎬 Tamil Dubbed Movies</h2>
+        <div class="movie-grid" id="tamil-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Hollywood Movies</h2>
+        <div class="movie-grid" id="hollywood-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Bollywood Movies</h2>
+        <div class="movie-grid" id="bollywood-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+    <div class="category-section">
+        <h2 class="category-title">🎬 Anime & Cartoons</h2>
+        <div class="movie-grid" id="anime-movies"><p class="loading-text">Loading movies...</p></div>
+    </div>
+
+<script>
+    // ⚠️ PASTE YOUR EXACT SUPABASE CREDENTIALS HERE
+    const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co"; 
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        // Initialize the localized database connection bridge
+        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        async function loadMovies() {
+            // Fetch rows sorted by newest upload date
+            const { data: movies, error } = await dbClient
+                .from('movies')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Database connection failed:", error);
+                return;
+            }
+
+            // Clear loading text placeholders
+            document.getElementById('tamil-movies').innerHTML = '';
+            document.getElementById('hollywood-movies').innerHTML = '';
+            document.getElementById('bollywood-movies').innerHTML = '';
+            document.getElementById('anime-movies').innerHTML = '';
+
+            // Handle empty database scenario
+            if (!movies || movies.length === 0) {
+                const emptyStr = "<p class='loading-text'>No movies found here yet.</p>";
+                document.getElementById('tamil-movies').innerHTML = emptyStr;
+                document.getElementById('hollywood-movies').innerHTML = emptyStr;
+                document.getElementById('bollywood-movies').innerHTML = emptyStr;
+                document.getElementById('anime-movies').innerHTML = emptyStr;
+                return;
+            }
+
+            // Render and append each movie entry to its matching container element
+            movies.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <h3>${movie.title}</h3>
+                    <a href="${movie.stream_link}" target="_blank" class="watch-btn">Stream / Watch</a>
+                `;
+
+                if (movie.category === "Tamil Dubbed Movies") {
+                    document.getElementById('tamil-movies').appendChild(movieCard);
+                } else if (movie.category === "Hollywood Movies") {
+                    document.getElementById('hollywood-movies').appendChild(movieCard);
+                } else if (movie.category === "Bollywood Movies") {
+                    document.getElementById('bollywood-movies').appendChild(movieCard);
+                } else if (movie.category === "Anime & Cartoons") {
+                    document.getElementById('anime-movies').appendChild(movieCard);
+                }
+            });
+        }
+
+        // Fire database pull query immediately
+        loadMovies();
+    });
+</script>
+</body>
+</html>
