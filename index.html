@@ -4,190 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iSaidon Movies - Movies Portal</title>
-    
-    <!-- FIX: Reads your custom supabase.js file locally from your GitHub repository -->
-    <script src="supabase.js"></script>
-    
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #141414; 
-            color: #ffffff; 
-            padding: 20px; 
-            margin: 0;
-        }
-        h1 { 
-            color: #E50914; 
-            text-align: center; 
-            margin-top: 30px;
-            font-size: 32px;
-        }
-        .category-section { 
-            max-width: 1000px;
-            margin: 40px auto; 
-        }
-        .category-title { 
-            border-bottom: 2px solid #E50914; 
-            padding-bottom: 8px; 
-            margin-bottom: 20px; 
-            font-size: 20px;
-            color: #f3f3f3;
-        }
-        .movie-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-            gap: 20px; 
-        }
-        .movie-card { 
-            background: #222222; 
-            padding: 20px; 
-            border-radius: 6px; 
-            text-align: center; 
-            border: 1px solid #333;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-        .movie-card h3 {
-            margin: 0 0 15px 0;
-            font-size: 16px;
-            color: #fff;
-        }
-        .watch-btn { 
-            display: inline-block; 
-            background: #E50914; 
-            color: white; 
-            padding: 10px 16px; 
-            text-decoration: none; 
-            border-radius: 4px; 
-            font-weight: bold; 
-            transition: background 0.2s;
-        }
-        .watch-btn:hover {
-            background: #b80710;
-        }
-        .loading-text {
-            text-align: center;
-            color: #888;
-            font-style: italic;
-        }
-        .search-container { 
-            max-width: 500px; 
-            margin: 20px auto 40px auto; 
-            text-align: center; 
-        }
-        .search-box { 
-            width: 100%; 
-            padding: 12px 20px; 
-            border-radius: 25px; 
-            border: 2px solid #333; 
-            background: #222; 
-            color: white; 
-            font-size: 16px; 
-            outline: none; 
-            transition: border-color 0.2s; 
-            box-sizing: border-box; 
-        }
-        .search-box:focus { 
-            border-color: #E50914; 
-        }
-
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #0f0f0f; color: #fff; padding: 30px; margin: 0; }
+        h1 { text-align: center; color: #ff6600; font-size: 2.5rem; }
+        h2 { border-bottom: 2px solid #333; padding-bottom: 10px; color: #00adef; margin-top: 40px; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding: 15px 0; }
+        .movie-card { background: #1a1a1a; border: 1px solid #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
+        .movie-title { font-size: 1.1rem; margin: 0 0 10px 0; color: #fff; word-break: break-all; }
+        .download-btn { display: block; width: 100%; padding: 10px; background: #ff6600; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center; box-sizing: border-box; margin-top: 15px; transition: background 0.2s; }
+        .download-btn:hover { background: #e05500; }
     </style>
 </head>
 <body>
 
-    <h1>iSaidon Movies Movies</h1>
+    <h1>🎬 iSaidon Movies Portal</h1>
 
-    <!-- NEW SEARCH BOX INPUT FIELD -->
-    <div class="search-container">
-        <input type="text" id="movieSearch" class="search-box" placeholder="🔍 Search through published movies instantly...">
-    </div>
+    <h2>🎬 Tamil Dubbed Movies</h2>
+    <div class="gallery" id="tamil-container">Loading movies...</div>
 
-    <!-- Movie Category Grids -->
-    <div class="category-section">
-        <h2 class="category-title">🎬 Tamil Dubbed Movies</h2>
-        <div class="movie-grid" id="tamil-movies"><p class="loading-text">Loading movies...</p></div>
-    </div>
+    <h2>🎬 Hollywood Movies</h2>
+    <div class="gallery" id="hollywood-container">Loading movies...</div>
 
-    <div class="category-section">
-        <h2 class="category-title">🎬 Hollywood Movies</h2>
-        <div class="movie-grid" id="hollywood-movies"><p class="loading-text">Loading movies...</p></div>
-    </div>
+    <h2>🎬 Bollywood Movies</h2>
+    <div class="gallery" id="bollywood-container">Loading movies...</div>
 
-    <div class="category-section">
-        <h2 class="category-title">🎬 Bollywood Movies</h2>
-        <div class="movie-grid" id="bollywood-movies"><p class="loading-text">Loading movies...</p></div>
-    </div>
+    <h2>🎬 Anime & Cartoons</h2>
+    <div class="gallery" id="anime-container">Loading movies...</div>
 
-    <div class="category-section">
-        <h2 class="category-title">🎬 Anime & Cartoons</h2>
-        <div class="movie-grid" id="anime-movies"><p class="loading-text">Loading movies...</p></div>
-    </div>
+    <!-- Load the wrapper bridge first -->
+    <script src="supabase-bridge.js"></script>
+    <script>
+        // Fetch public credentials securely from backend config
+        async function initPortal() {
+            try {
+                const configRes = await fetch('/api/config');
+                const config = await configRes.json();
+                
+                // Initialize using your local bridge structure
+                const client = window.supabase.createClient(config.url, config.key);
+                loadCategoryData(client);
+            } catch (err) {
+                console.error("Initialization error:", err);
+            }
+        }
 
-<script>
-    // ⚠️ PASTE YOUR EXACT SUPABASE CREDENTIALS HERE
-    const SUPABASE_URL = "https://wmmwdaracogfvbpnwxgi.supabase.co"; 
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndtbXdkYXJhY29nZnZicG53eGdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjIzMzEsImV4cCI6MjEwNzk5ODMzMX0.lQjAcTboJjIm0A8pqGQ1JsGIGcHH1qUfTXE3R8coB3A";
-    
-    window.addEventListener('DOMContentLoaded', () => {
-        // Initialize the localized database connection bridge
-        const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        async function loadMovies() {
-            // Fetch rows sorted by newest upload date
-            const { data: movies, error } = await dbClient
-                .from('movies')
-                .select('*')
-                .order('created_at', { ascending: false });
-
+        async function loadCategoryData(client) {
+            // Fetch records from your Supabase 'movies' table ordered by newest
+            const { data: movies, error } = await client.from('movies').select('*').order('id', { ascending: false });
+            
             if (error) {
-                console.error("Database connection failed:", error);
+                console.error("Database fetch failure:", error);
                 return;
             }
 
-            // Clear loading text placeholders
-            document.getElementById('tamil-movies').innerHTML = '';
-            document.getElementById('hollywood-movies').innerHTML = '';
-            document.getElementById('bollywood-movies').innerHTML = '';
-            document.getElementById('anime-movies').innerHTML = '';
+            // Reset containers
+            const categories = {
+                'Tamil Dubbed Movies': document.getElementById('tamil-container'),
+                'Hollywood Movies': document.getElementById('hollywood-container'),
+                'Bollywood Movies': document.getElementById('bollywood-container'),
+                'Anime & Cartoons': document.getElementById('anime-container')
+            };
 
-            // Handle empty database scenario
-            if (!movies || movies.length === 0) {
-                const emptyStr = "<p class='loading-text'>No movies found here yet.</p>";
-                document.getElementById('tamil-movies').innerHTML = emptyStr;
-                document.getElementById('hollywood-movies').innerHTML = emptyStr;
-                document.getElementById('bollywood-movies').innerHTML = emptyStr;
-                document.getElementById('anime-movies').innerHTML = emptyStr;
-                return;
-            }
+            Object.values(categories).forEach(el => el.innerHTML = '');
 
-            // Render and append each movie entry to its matching container element
+            // Render matching database records into containers
             movies.forEach(movie => {
-                const movieCard = document.createElement('div');
-                movieCard.className = 'movie-card';
-                movieCard.innerHTML = `
-                    <h3>${movie.title}</h3>
-                    <!-- UPDATE THIS LINE IN YOUR INDEX.HTML LOOP -->
-                    <a href="${movie.link}" target="_blank" style="display: block; width: 100%; padding: 12px; background: #ff6600; color: white; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; font-family: sans-serif; box-sizing: border-box; margin-top: 10px;">
-                       📥 Go to Download Page
-                    </a>
+                // Ensure external absolute URL safety for Gofile endpoints
+                let targetUrl = movie.link || '#';
+                if (targetUrl !== '#' && !targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+                    targetUrl = 'https://' + targetUrl;
+                }
 
-
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.innerHTML = `
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <a href="${targetUrl}" target="_blank" class="download-btn">📥 Go to Download Page</a>
                 `;
 
-                if (movie.category === "Tamil Dubbed Movies") {
-                    document.getElementById('tamil-movies').appendChild(movieCard);
-                } else if (movie.category === "Hollywood Movies") {
-                    document.getElementById('hollywood-movies').appendChild(movieCard);
-                } else if (movie.category === "Bollywood Movies") {
-                    document.getElementById('bollywood-movies').appendChild(movieCard);
-                } else if (movie.category === "Anime & Cartoons") {
-                    document.getElementById('anime-movies').appendChild(movieCard);
+                if (categories[movie.category]) {
+                    categories[movie.category].appendChild(card);
+                }
+            });
+
+            // Handle empty containers fallback
+            Object.keys(categories).forEach(key => {
+                if (categories[key].children.length === 0) {
+                    categories[key].innerHTML = '<p style="color: #666;">No media links published yet.</p>';
                 }
             });
         }
 
-        // Fire database pull query immediately
-        loadMovies();
-    });
-</script>
+        initPortal();
+    </script>
 </body>
 </html>
