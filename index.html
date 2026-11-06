@@ -48,6 +48,62 @@
             linear-gradient(180deg, #09090b 0%, #151515 48%, #080808 100%);
         background-repeat: no-repeat;
     }
+
+    /* 1. The main grid system arranging posters side-by-side */
+.movieGrid, .movie-grid {
+    display: grid;
+    /* Adjust '160px' if you want the posters to be smaller or larger */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    /* Small, tight gaps between posters like the image */
+    gap: 12px; 
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* 2. Compact card styling */
+.movie-card {
+    background: transparent; /* No background box required */
+    border: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* 3. The poster image wrapper - perfectly square-edged with zero gap below it */
+.movie-card img {
+    width: 100%;
+    height: 200px; /* Fixed height so all posters are uniform */
+    object-fit: cover;
+    border-radius: 15px; /* Smooth rounded corners like the app layout */
+    margin: 0 0 15px 0; /* Tiny gap strictly beneath the poster image */
+    padding: 0;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+/* Subtle zoom effect when hovering over the poster */
+.movie-card:hover img {
+    transform: scale(1.03);
+}
+
+/* 4. Small, clean title style right under the poster */
+.movie-card h2, 
+.movie-card h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    margin: 0;
+    padding: 0 2px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds '...' if the movie title is too long */
 }
 
 
