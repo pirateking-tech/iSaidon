@@ -32,16 +32,15 @@
         max-width: 430px;
         margin: 0 auto;
         padding: 10px;
-        background-color: transparent;
-        background-image: block;
-        isolation: isolate;
+        box-sizing: border-box; /* Ensures padding doesn't break widths */
+        position: relative;     /* Allows background layering to work correctly */
     }
 
     body::before {
         content: "";
         position: fixed;
         inset: 0;
-        z-index: -1;
+        z-index: -1; /* This pushes the background BEHIND your cards */
         pointer-events: none;
         background-color: #09090b;
         background-image:
@@ -50,6 +49,7 @@
         background-repeat: no-repeat;
     }
 }
+
 
         
 
