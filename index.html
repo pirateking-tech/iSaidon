@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
     <title>iSaidon</title>
     <link rel="icon" href="img/image.jpg">
     <style>
@@ -26,28 +26,33 @@
             background-repeat: no-repeat;
         }
 
-@media (max-width: 768px) {
-    body {
-        width: 100%;
-        max-width: 430px;
-        margin: 0 auto;
-        padding: 10px;
-        box-sizing: border-box; /* Ensures padding doesn't break widths */
-        position: relative;     /* Allows background layering to work correctly */
+@media (max-width: 480px) {
+    .movie-image {
+        flex: 0 0 80px; /* Reduce image size slightly for small phones */
     }
+    .movie-name {
+        font-size: 14px; /* Ensure text fits */
+    }
+}
+        /* Update this in your style.css */
+.movie-list {
+    display: flex;
+    flex-wrap: wrap; /* Critical for mobile stacking */
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+}
 
-    body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        z-index: -1; /* This pushes the background BEHIND your cards */
-        pointer-events: none;
-        background-color: #09090b;
-        background-image:
-            radial-gradient(ellipse at 50% -20%, rgba(120, 10, 25, 0.45), transparent 55%),
-            linear-gradient(180deg, #09090b 0%, #151515 48%, #080808 100%);
-        background-repeat: no-repeat;
-    }
+.movie {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Ensures it takes full width on mobile */
+    max-width: 500px; /* Prevents it from being too wide on tablets */
+    margin: 5px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+}
 
     /* 1. The main grid system arranging posters side-by-side */
 .movieGrid, .movie-grid {
