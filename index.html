@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>iSaidon</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iSaidon - Live Movie Publisher</title>
+    <!-- Supabase JavaScript Library SDK -->
+    <script src="https://jsdelivr.net"></script>
     <style>
-        
         body {
             background-position: center;
             min-height: 100vh;
@@ -19,18 +19,6 @@
             justify-content: center;
             align-items: flex-start;
         }
-        .container {
-            background-color: #308bcf;
-            display: inline-block;
-            padding: 0px;
-            
-        }
-        .normal-container {
-            background-color: #308bcf;
-            padding: 16px;
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
         .out-container {
             background-color: #ffffff;
             min-height: 100vh;
@@ -42,15 +30,61 @@
             flex-direction: column;
             align-items: stretch;
         }
+        .container {
+            background-color: #308bcf;
+            display: inline-block;
+            padding: 0px;
+            width: 100%;
+        }
+        .normal-container {
+            background-color: #308bcf;
+            padding: 16px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        /* Admin Input Styling */
+        .admin-box {
+            background-color: #246fa8;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+        }
+        .admin-box input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            margin: 4px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .admin-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #00bcd4;
+            border: none;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 6px;
+            border-radius: 4px;
+        }
+        .admin-box button:hover {
+            background-color: #0097a7;
+        }
+        /* Dynamic Folder Layout */
         .folder {
             background-color: #f9f9f9;
-            height: 15px;
-            width: 560px;
+            height: auto;
+            min-height: 20px;
+            width: 100%;
+            box-sizing: border-box;
             padding: 10px 8px;
             border-bottom: 1px solid #838383;
             margin-top: 0px;
             margin-bottom: 0px;
             display: flex;
+            align-items: center;
         }
         .folder a {
             flex-grow: 1;
@@ -74,27 +108,7 @@
             background-color: #f0f0f0;
             cursor: pointer;
         }
-        .body-container {
-            background-color: #d2d2dfd5;
-            min-height: 100vh;
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            margin: 0 auto;
-            border-radius: 8px;
-        }
-        
-        .trends {
-            font-size: 14px;
-        }
-            
-            
-
-        h1{
+        h1 {
             margin-top: 0em;
             margin-bottom: 0.3em;
             text-align: center;
@@ -117,70 +131,114 @@
             text-align: center;
             color: #ffffff;
         }
-        
-
+        .loading-text {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
     </style>
-    </head>
-    <body>
-    
-        <div class="out-container">
-        <div class="body-container">
-        <div class="container" style="margin-bottom: 20px;">
-            <h1>iSaidon</h1>
-            <h4 style="text-align: center;">A simple and easy to use text editor</h4>
-        </div>
-        <div>
-            <center>
-            <strong style="color: #cc9b14;">Follow our <a style="color: #e91111;" href="https://t.me/your_channel" target="_blank">Telegram Update Page</a> for the latest updates and news!</strong> <br><br>
-            <span style="text-align: center; font-size: 22px; margin-top: 0em; margin-bottom: 0.3em; color: #d31030;">ISaidon.com</span>
-            <br><br>
-            " (Please Bookmark & Google Search) "
-            </center>
-        </div>
-        <br>
+</head>
+<body>
+
+    <div class="out-container">
         <div class="container">
-            <h3>iSaidon Trends</h3>
-        </div>
-        <br>
-        <div class="trends">
-            <strong style="color: #000000;">isaiDon.com</strong><span>➞</span>" Tamil Dubbed Movies Download Tamil 2026 Dubbed Movies Download Tamil HD Dubbed Movies Download Moviesda Tamil 720p 1080p HD Dubbed Movies Download isaimini Dubbed Movies Download isaidub 2026 Tamil Dubbed Movies Download isaimini.com " <br><br>
-            <strong style="color: #000000;">isaiDon</strong> <br>
-            <p>isaiDon is a popular destination for downloading the latest Tamil dubbed movies in one place. Download 2026 Tamil Dubbed Movies, Hollywood Tamil Dubbed Movies, South Indian Dubbed Movies, Tamil Dubbed Web Series</p>
-            <strong style="color: #000000;">iSaidon 2026</strong>
-            <p>iSaidon 2026 is a website that provides a wide range of Tamil dubbed movies for download. It offers a collection of the latest releases, including Hollywood and South Indian films, all dubbed in Tamil. Users can easily access and download their favorite movies in high quality.</p>
-            <strong style="color: #000000;">isaiDub Tamil Dubbed Movies</strong>
-            <p>isaiDub is a platform that specializes in providing Tamil dubbed movies for download. It features a diverse selection of films, including the latest releases and popular titles from various genres. Users can enjoy high-quality downloads of their favorite movies, all dubbed in Tamil.</p>
-            <strong style="color: #000000;">இசைடப் 2026 தமிழ் டப்பிங் திரைப்படங்கள்</strong>
-            <p>இசைடப் 2026 தமிழ் டப்பிங் திரைப்படங்கள் என்பது தமிழ் மொழியில் டப்பிங் செய்யப்பட்ட திரைப்படங்களை பதிவிறக்கம் செய்யும் ஒரு பிரபலமான தளம் ஆகும். இது ஹாலிவுட் மற்றும் தென்னிந்திய திரைப்படங்களின் சமீபத்திய வெளியீடுகளை உள்ளடக்கியது. பயனர்கள் தங்கள் விருப்பமான திரைப்படங்களை எளிதாக அணுகி, உயர் தரத்தில் பதிவிறக்கம் செய்யலாம்.</p>
-        </div>
-        <div class="normal-container" >
-            <h3>isaiDub Latest Updates</h3>
-        </div>
-        </div>
-        <center><div><h3 style="color: #000000;">watching and enjoying</h3></div></center>
-        <div class="normal-container" >
-            <h3>Tamil Dubbed Movies</h3>
-        </div>
-        <div class="folder" onclick="open()">
-            <img src="img/folder.jpg" alt="Folder">
-            <a href="iSaidon.streaming.html">
+            <div class="normal-container">
+                <h1>iSaidon</h1>
+                <h4>A simple and easy to use text editor</h4>
                 
-                Tamil 2026 Dubbed Movies
-            </a>
+                <!-- Admin Publishing Tool -->
+                <div class="admin-box">
+                    <h3>Publish Movie Manager</h3>
+                    <input type="text" id="movieTitle" placeholder="Movie Name (e.g., MovieName Tamil Dubbed)">
+                    <input type="text" id="movieYear" placeholder="Year (e.g., 2026)">
+                    <input type="text" id="movieLink" placeholder="Streaming/Download Link URL">
+                    <button onclick="publishMovie()">Publish</button>
+                </div>
+            </div>
         </div>
-        
 
+        <!-- This area updates dynamically without individual coding rows -->
+        <div id="movieDisplayArea">
+            <div class="loading-text">Connecting to server...</div>
         </div>
-        </div>
+    </div>
 
-        <script>
-            function open() {
-                href = "iSaidon.streaming.html";
+    <script>
+        // Connected to your live database credentials
+        const SUPABASE_URL = "https://ussrtmkwasnajfphykby.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVzc3J0bWt3YXNuYWpmpGh5a2J5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxMzM2MDEsImV4cCI6MjEwOTcwOTYwMX0.OSMQUulZIHkm8T1sVlNmK5K5IyKDGzCV9WUY1nxLXUM";
+
+        // Initialize connection
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Fetch updates from live server and build folders automatically
+        async function displayMovies() {
+            const movieContainer = document.getElementById("movieDisplayArea");
+            movieContainer.innerHTML = '<div class="loading-text">Loading movies...</div>';
+
+            let { data: movies, error } = await supabase
+                .from('movies')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                movieContainer.innerHTML = '<div class="loading-text" style="color:red;">Database Error! Check settings or RLS policies.</div>';
+                console.error(error);
+                return;
             }
 
-        </script>
-        
-        </div>
-     </body>
-    
+            if (movies.length === 0) {
+                movieContainer.innerHTML = '<div class="loading-text">No movies published yet. Use the manager above to add one!</div>';
+                return;
+            }
+
+            movieContainer.innerHTML = ""; // Wipe container loader
+            
+            // Generate structured folder list
+            movies.forEach(movie => {
+                let folderRow = document.createElement("div");
+                folderRow.className = "folder";
+                
+                folderRow.innerHTML = `
+                    <img src="https://icons8.com" alt="folder icon">
+                    <a href="${movie.link}" target="_blank">${movie.title} (${movie.year})</a>
+                `;
+                movieContainer.appendChild(folderRow);
+            });
+        }
+
+        // Single button mechanism to execute publish task
+        async function publishMovie() {
+            let title = document.getElementById("movieTitle").value;
+            let year = document.getElementById("movieYear").value;
+            let link = document.getElementById("movieLink").value;
+
+            if (!title || !year || !link) {
+                alert("Please complete all configuration fields first!");
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('movies')
+                .insert([{ title, year, link }]);
+
+            if (error) {
+                alert("Failed to upload info: " + error.message);
+            } else {
+                alert("Successfully published online globally!");
+                displayMovies(); // Instant structural update
+                
+                // Clean input views
+                document.getElementById("movieTitle").value = "";
+                document.getElementById("movieYear").value = "";
+                document.getElementById("movieLink").value = "";
+            }
+        }
+
+        // Run application sequence on launch
+        window.onload = displayMovies;
+    </script>
+
+</body>
 </html>
