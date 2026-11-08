@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>iSaidon</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --page: #111114;
+            --surface: #1c1c21;
+            --surface-raised: #25252c;
+            --text: #f5f5f7;
+            --muted: #aaaab3;
+            --accent: #e3313d;
+            --accent-hover: #c8202d;
+            --border: #34343c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: var(--page);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        .container,
+        .normal-container {
+            padding: 12px 16px;
+            background: var(--surface-raised);
+        }
+
+        .out-container {
+            width: 100%;
+            max-width: 600px;
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            background: var(--surface);
+        }
+
+        .body-container {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #19191e;
+        }
+
+        .folder {
+            width: 100%;
+            min-height: 42px;
+            padding: 10px 8px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .folder a {
+            flex-grow: 1;
+            padding: 2px 4px;
+            color: var(--text);
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .folder img {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            padding: 0 4px;
+        }
+
+        a {
+            color: var(--text);
+            font-size: 14px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .folder:hover {
+            background: var(--surface-raised);
+            cursor: pointer;
+        }
+
+        .trends {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .trends strong {
+            color: var(--text) !important;
+        }
+
+        .trends p {
+            margin: 8px 0 16px;
+        }
+
+        h1 {
+            margin: 0 0 0.3em;
+            color: var(--text);
+            text-align: center;
+        }
+
+        h3 {
+            margin: 0.3em 0;
+            padding: 0.1em;
+            color: var(--text);
+            font-size: 1.3em;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        h4 {
+            margin: 0 0 0.3em;
+            color: var(--muted);
+            font-size: 1em;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        input,
+        select {
+            max-width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #111114;
+            color: var(--text);
+        }
+
+        input:focus-visible,
+        select:focus-visible,
+        a:focus-visible {
+            outline: 3px solid #ffbd52;
+            outline-offset: 2px;
+        }
+
+        .movie-card {
+            min-width: 0;
+            padding: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            text-align: center;
+            transition: transform 160ms ease, border-color 160ms ease;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+        }
+
+        .movie-card img {
+            display: block;
+            width: 100%;
+            max-height: 130px;
+            aspect-ratio: 2 / 3;
+            margin: 0 auto 8px;
+            border-radius: 6px;
+            background: var(--surface-raised);
+            object-fit: cover;
+        }
+
+        #movie-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            align-items: start;
+            gap: 12px;
+        }
+
+        .movie-card strong,
+        .movie-card span {
+            display: block;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 520px) {
+            .out-container {
+                padding: 12px;
+            }
+
+            .body-container {
+                padding: 12px;
+            }
+
+            #movie-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <div class="out-container">
+        <div class="body-container">
+        <div class="container" style="margin-bottom: 20px;">
+            <h1>iSaidon</h1>
+            <h4 style="text-align: center;">A simple and easy to use text editor</h4>
+        </div>
+        <div>
+            <center>
+            <strong style="color: #cc9b14;">Follow our <a style="color: #e91111;" href="https://t.me/your_channel" target="_blank">Telegram Update Page</a> for the latest updates and news!</strong> <br><br>
+            <span style="text-align: center; font-size: 22px; margin-top: 0em; margin-bottom: 0.3em; color: #d31030;">ISaidon.com</span>
+            <br><br>
+            " (Please Bookmark & Google Search) "
+            </center>
+        </div>
+        <br>
+        <div class="container">
+            <h3>iSaidon Trends</h3>
+        </div>
+        <br>
+        <div class="trends">
+            <strong style="color: #000000;">isaiDon.com</strong><span>➞</span>" Tamil Dubbed Movies Download Tamil 2026 Dubbed Movies Download Tamil HD Dubbed Movies Download Moviesda Tamil 720p 1080p HD Dubbed Movies Download isaimini Dubbed Movies Download isaidub 2026 Tamil Dubbed Movies Download isaimini.com " <br><br>
+            <strong style="color: #000000;">isaiDon</strong> <br>
+            <p>isaiDon is a popular destination for downloading the latest Tamil dubbed movies in one place. Download 2026 Tamil Dubbed Movies, Hollywood Tamil Dubbed Movies, South Indian Dubbed Movies, Tamil Dubbed Web Series</p>
+            <strong style="color: #000000;">iSaidon 2026</strong>
+            <p>iSaidon 2026 is a website that provides a wide range of Tamil dubbed movies for download. It offers a collection of the latest releases, including Hollywood and South Indian films, all dubbed in Tamil. Users can easily access and download their favorite movies in high quality.</p>
+            <strong style="color: #000000;">isaiDub Tamil Dubbed Movies</strong>
+            <p>isaiDub is a platform that specializes in providing Tamil dubbed movies for download. It features a diverse selection of films, including the latest releases and popular titles from various genres. Users can enjoy high-quality downloads of their favorite movies, all dubbed in Tamil.</p>
+            <strong style="color: #000000;">இசைடப் 2026 தமிழ் டப்பிங் திரைப்படங்கள்</strong>
+            <p>இசைடப் 2026 தமிழ் டப்பிங் திரைப்படங்கள் என்பது தமிழ் மொழியில் டப்பிங் செய்யப்பட்ட திரைப்படங்களை பதிவிறக்கம் செய்யும் ஒரு பிரபலமான தளம் ஆகும். இது ஹாலிவுட் மற்றும் தென்னிந்திய திரைப்படங்களின் சமீபத்திய வெளியீடுகளை உள்ளடக்கியது. பயனர்கள் தங்கள் விருப்பமான திரைப்படங்களை எளிதாக அணுகி, உயர் தரத்தில் பதிவிறக்கம் செய்யலாம்.</p>
+        </div>
+        <div class="normal-container" >
+            <h3>isaiDub Latest Updates</h3>
+        </div>
+        </div>
+        <center><div><h3 style="color: #000000;">watching and enjoying</h3></div></center>
+        <div class="normal-container" >
+            <h3>Tamil Dubbed Movies</h3>
+        </div>
+        <div id="movie-container">
+            
+        </div>
+        <script>
+            const container = document.getElementById("movie-container")
+            const MOVIES_STORAGE_KEY = "isaidon-published-movies"
+
+            function renderMovie(movie) {
+                const card = document.createElement("article")
+                card.className = "movie-card"
+
+                const link = document.createElement("a")
+                link.href = movie.url
+                link.target = "_blank"
+                link.rel = "noopener noreferrer"
+
+                const image = document.createElement("img")
+                image.src = movie.poster
+                image.alt = movie.name + " poster"
+
+                const title = document.createElement("strong")
+                title.textContent = movie.name
+
+                const year = document.createElement("span")
+                year.textContent = movie.category
+
+                link.appendChild(image)
+                card.appendChild(link)
+                card.appendChild(title)
+                card.appendChild(year)
+                container.appendChild(card)
+            }
+
+            function loadMovies() {
+                try {
+                    const savedMovies = JSON.parse(localStorage.getItem(MOVIES_STORAGE_KEY) || "[]")
+                    if (!Array.isArray(savedMovies)) {
+                        throw new Error("Saved movie data is not a list.")
+                    }
+
+                    savedMovies.forEach(function(movie) {
+                        if (
+                            movie &&
+                            typeof movie.name === "string" &&
+                            typeof movie.poster === "string" &&
+                            typeof movie.url === "string" &&
+                            typeof movie.category === "string"
+                        ) {
+                            renderMovie(movie)
+                        }
+                    })
+                } catch (error) {
+                    console.error("Could not load saved movies.", error)
+                }
+            }
+
+            loadMovies()
+
+            
+
+
+        </script>
+        
+        </div>
+     </body>
+    
+</html>
