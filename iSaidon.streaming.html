@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movies — iSaidon</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/config.js"></script>
+  <script defer src="assets/js/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">i</span> iSaidon</a>
+    <nav><a class="nav-link" href="index.html">Home</a><a class="nav-link active" href="iSaidon.streaming.html">Movies</a><a class="nav-link" href="admin.html">Admin</a></nav>
+  </header>
+  <main class="page-main">
+    <section class="page-title"><p class="eyebrow">THE COLLECTION</p><h1>Movie library</h1><p>Browse titles and use their authorized viewing or download links.</p></section>
+    <section class="toolbar">
+      <label class="search-wrap"><span class="sr-only">Search movies</span><input id="movieSearch" type="search" placeholder="Search by movie title…"></label>
+      <label><span class="sr-only">Filter by category</span><select id="categoryFilter"><option value="">All categories</option></select></label>
+    </section>
+    <div id="libraryStatus" class="status">Loading movies…</div>
+    <div id="allMovies" class="movie-grid"></div>
+    <section id="movieDetail" hidden></section>
+  </main>
+  <footer class="site-footer"><span>© <span id="year"></span> iSaidon</span><span>Only share films and links you are authorized to distribute.</span></footer>
+</body>
+</html>

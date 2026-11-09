@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — iSaidon</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/config.js"></script>
+  <script defer src="assets/js/admin.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark">i</span> iSaidon</a>
+    <nav><a class="nav-link" href="index.html">Home</a><a class="nav-link" href="iSaidon.streaming.html">Movies</a><a class="nav-link active" href="admin.html">Admin</a></nav>
+  </header>
+  <main class="admin-main">
+    <section class="admin-intro"><p class="eyebrow">PRIVATE CONTROL PANEL</p><h1>Admin dashboard</h1><p>Sign in with the admin account you created in Supabase Authentication.</p></section>
+
+    <section id="loginPanel" class="panel narrow">
+      <h2>Admin sign in</h2>
+      <form id="loginForm">
+        <label>Email<input id="email" type="email" autocomplete="username" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+        <button class="button button-primary full" type="submit">Sign in</button>
+      </form>
+    </section>
+
+    <section id="dashboardPanel" class="panel" hidden>
+      <div class="section-heading"><div><p class="eyebrow">SIGNED-IN ADMIN</p><h2>Manage movies</h2></div><button id="logoutButton" class="button button-quiet" type="button">Sign out</button></div>
+      <form id="movieForm" class="movie-form">
+        <input id="movieId" type="hidden">
+        <label>Movie title<input id="title" maxlength="180" required></label>
+        <label>Category<input id="category" maxlength="80" placeholder="Tamil, Action, Drama…" required></label>
+        <label>Poster image URL<input id="poster_url" type="url" placeholder="https://…" required></label>
+        <label>Authorized movie URL<input id="movie_url" type="url" placeholder="https://…" required></label>
+        <label class="wide">Description<textarea id="description" rows="3" maxlength="1200"></textarea></label>
+        <label>Release year<input id="release_year" type="number" min="1888" max="2100" placeholder="2026"></label>
+        <div class="form-actions wide"><button class="button button-primary" type="submit" id="saveMovieButton">Publish movie</button><button class="button button-quiet" type="button" id="clearFormButton">Clear form</button></div>
+      </form>
+      <div id="adminStatus" class="status" role="status"></div>
+      <h3 class="manage-heading">Existing movies</h3>
+      <div id="adminMovieList" class="admin-movie-list"></div>
+    </section>
+    <p id="pageStatus" class="status" role="status"></p>
+  </main>
+  <footer class="site-footer"><span>© <span id="year"></span> iSaidon</span><span>Keep admin credentials private. Never add a service-role key to this site.</span></footer>
+</body>
+</html>
